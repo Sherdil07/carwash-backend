@@ -8,8 +8,19 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Middleware
-app.use(cors()); // Enable CORS
+app.use(
+  cors({
+    origin: "https://carwash-frontend-eight.vercel.app", // Allow requests from the frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allow specific HTTP methods
+  })
+);
 app.use(express.json()); // Parse JSON request bodies
+
+// Logging middleware to log incoming requests
+app.use((req, res, next) => {
+  console.log(`${req.method} request for '${req.url}'`);
+  next();
+});
 
 // MongoDB connection
 mongoose
@@ -38,6 +49,7 @@ app.get("/api/invoices", async (req, res) => {
     const invoices = await Invoice.find();
     res.json(invoices);
   } catch (err) {
+    console.error("Error fetching invoices:", err); // Log the error
     res.status(500).json({ error: "Failed to fetch invoices" });
   }
 });
@@ -59,6 +71,7 @@ app.post("/api/invoices", async (req, res) => {
     const savedInvoice = await invoice.save();
     res.status(201).json(savedInvoice);
   } catch (err) {
+    console.error("Error creating invoice:", err); // Log the error
     res.status(500).json({ error: "Failed to create invoice" });
   }
 });
@@ -77,6 +90,7 @@ app.put("/api/invoices/:id", async (req, res) => {
     }
     res.json(updatedInvoice);
   } catch (err) {
+    console.error("Error updating invoice:", err); // Log the error
     res.status(500).json({ error: "Failed to update invoice" });
   }
 });
@@ -90,6 +104,7 @@ app.delete("/api/invoices/:id", async (req, res) => {
     }
     res.json({ message: "Invoice deleted successfully" });
   } catch (err) {
+    console.error("Error deleting invoice:", err); // Log the error
     res.status(500).json({ error: "Failed to delete invoice" });
   }
 });
