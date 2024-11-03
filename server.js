@@ -1,7 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenv").config(); // Load environment variables
+const dotenv = require("dotenv");
+const serviceRoutes = require("./routes/services"); // Import the services routes
+
+dotenv.config(); // Load environment variables
 
 // Create an instance of Express
 const app = express();
@@ -108,6 +111,9 @@ app.delete("/api/invoices/:id", async (req, res) => {
     res.status(500).json({ error: "Failed to delete invoice" });
   }
 });
+
+// Include service routes
+app.use("/api", serviceRoutes); // Mount the service routes under /api
 
 // Start the server
 app.listen(PORT, () => {
