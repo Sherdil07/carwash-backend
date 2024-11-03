@@ -113,7 +113,7 @@ app.delete("/api/invoices/:id", async (req, res) => {
 });
 
 // Include service routes
-app.use("/api", serviceRoutes); // Mount the service routes under /api
+app.use("/api/services", serviceRoutes); // Mount the service routes under /api
 
 // Start the server
 app.listen(PORT, () => {
